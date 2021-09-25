@@ -4,7 +4,7 @@ Let sieve be an array of boolean, initially set to True
 for i = 2 to N
 	if sieve[i] is False
 		continue
-		for j = 2i, 3i, 4i .... do not excced N
-			sieve[j] = False
+		for multiple = 2i, 3i, 4i .... do not excced N
+			sieve[multiple] = False
 count number of True in sieve, from 2 to N of sieve
 print number of True
