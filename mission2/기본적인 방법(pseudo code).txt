@@ -1,7 +1,7 @@
 N이하의 소수를 구하는 기본적인 방법
 
 //1,2를 미리 고려
-Initialize counter to N-2
+Initialize counter to N-1
 For dividend = 3 To N
 	for divisor = 2 To i-1
 		if dividend is divisible by divisor
