@@ -1,0 +1,9 @@
+N이하의 소수를 구하는 기본적인 방법
+
+Initialize counter to N
+For i = 1 To N
+	for j = 2 To i-1
+		if i is divisible by j
+			subtract 1 to counter
+			break j loop
+Print counter
