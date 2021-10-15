@@ -1,45 +1,79 @@
 /*
-* @Author: 2018-13285 ¹é¿ìÇö
-* @Date:   2021-09-24 03:25:34
-* Brief: ÇÕ¼º¼ö´Â ÃÖ¼Ò ¼ÒÀÎ¼ö¿Í ÇÕ¼º¼ö È¤Àº ÃÖ¼Ò ¼ÒÀÎ¼ö¿Í ¼Ò¼öÀÇ °öÀ¸·Î ³ªÅ¸³¾ ¼ö ÀÖ´Ù´Â °ÍÀ» ÀÌ¿ëÇÑ´Ù.
-  10^9 ÀÌÇÏÀÇ ¸ğµç ¼öÀÇ ÃÖ¼Ò ¼ÒÀÎ¼ö¸¦ ±¸ÇØ, ±× Áß ÀÚ±â ÀÚ½ÅÀ» ÃÖ¼Ò ¼ÒÀÎ¼ö·Î °®´Â ¼ö(¼Ò¼ö)¸¦ Ã£´Â´Ù.
-* TODO: ¼Ö·ç¼Ç ±¸¼ºÀ» Release·Î, ¼Ö·ç¼Ç ÇÃ·§ÆûÀ» X64·Î ¼³Á¤ÇÑ´Ù.
-* Reference :
-	1.<Linear-sieve>, 2020.02.25.,<https://ahgus89.github.io/algorithm/Linear-sieve/>, 2021.09.24.
-	2.<Sieve of Eratosthenes Having Linear Time Complexity>,
-	<https://cp-algorithms.com/algebra/prime-sieve-linear.html>, 2021.09.24.
+* @Author: 2018-13285 ë°±ìš°í˜„
+* @Date:   2021-10-15 23:21:34
+* Brief: 11X11ì˜ ì²´ìŠ¤íŒì— ë†“ì„ ìˆ˜ ìˆëŠ” 11ê°œì˜ í€¸ì˜ ì²«ë²ˆì§¸ ì¡°í•©ì„ ì°¾ëŠ”ë‹¤. DFSë¥¼ ì‚¬ìš©í•œë‹¤.
+         ê²°ê³¼ê°’ì€ ê° í–‰ì˜ í€¸ì´ ë†“ì—¬ì ¸ìˆëŠ” ì—´ì˜ ìœ„ì¹˜ë¥¼ ì¶œë ¥í•¨ìœ¼ë¡œì¨ ë³´ì¸ë‹¤.
 */
 
-
-#include "std_lib_facilities.h"
-#include <time.h>
+#include <ctime>
+#include <iostream>
 #include <vector>
+
+using namespace std;
+// í•œ í–‰ì—ì„œ ì‹œì‘ ì—´ë¶€í„° ë ì—´ê¹Œì§€ ê°€ëŠ¥í•œ ì²«ë²ˆì§¸ì˜ ìœ„ì¹˜ë¥¼ ì°¾ëŠ” í•¨ìˆ˜.
+//ì…ë ¥ê°’ì€ ì‹œì‘ì—´ê³¼ í€¸ì˜ ìœ„ì¹˜.
+int check(int start, vector<int> point) {
+	for (int i = start; i < 11; i++) {
+		//ê¸ˆì§€ëœ ì—´ì¸ì§€ í™•ì¸. í—ˆìš©ëœ ì—´ì´ë¼ ê°€ì •.
+		bool forbidden = false;
+		for (int j = 0; j < point.size(); j++) {
+			//í•œ í€¸ì— ì˜í•´ ê¸ˆì§€ëìœ¼ë©´ ë‹¤ë¥¸ í€¸ì— ì˜í•´ ê¸ˆì§€ë˜ëŠ”ì§€ëŠ” í™•ì¸í•˜ì§€ ì•ŠìŒ.
+			if (forbidden == true) {
+				break;
+			}//í€¸ìœ¼ë¡œë¶€í„° ëŒ€ê°ì„ ê³¼ ì§ì„ ì— ìœ„ì¹˜í•˜ëŠ”ì§€ í™•ì¸.
+			if (i == point[j] || i == (point[j] + point.size() - j) || i == (point[j] - point.size() + j)) {
+				forbidden = true;
+			}
+		}
+		//ê¸ˆì§€ë˜ì§€ ì•Šì€ ì²«ë²ˆì§¸ ìœ„ì¹˜ë¥¼ ë°˜í™˜.
+		if (forbidden == true) {
+			continue;
+		}
+		return i;
+	}//ì „ë¶€ ê¸ˆì§€ëìœ¼ë©´ ë„ë‹¬í•  ìˆ˜ ì—†ëŠ” ì—´ ë²ˆí˜¸ì¸ 11ì„ ë°˜í™˜. 
+	return 11;
+}
+
+//ì¬ê·€ë¥¼ ì´ìš©í•´ í•œì¤„ì”© ì°¨ë¡€ë¡œ í€¸ì˜ ìœ„ì¹˜ë¥¼ ì°¾ëŠ” í•¨ìˆ˜.
+//ì…ë ¥ê°’ì€ ì‹œì‘ì—´ê³¼ í€¸ì˜ ìœ„ì¹˜.
+void dfs(vector<int> point, int start) {
+	//11ë²ˆì§¸ í–‰ê¹Œì§€ ëª¨ë‘ ì±„ì›Œì§ˆë•Œê¹Œì§€ ì‹¤í–‰
+	if (point.size() != 11) {
+		//ê°€ëŠ¥í•œ ì—´.
+		int check_result = check(start, point);
+		//ê°€ëŠ¥í•œ ì—´ì´ ì—†ì„ ê²½ìš°.
+		if (check_result == 11) {
+			//ë°”ë¡œ ìœ„ì˜ í–‰ì˜ í€¸ì˜ ìœ„ì¹˜ë¥¼ ì €ì¥.
+			int back = point.back();
+			//ë°”ë¡œ ìœ„ì˜ í–‰ì˜ í€¸ì„ ì œê±°.
+			point.pop_back();
+			//ì›ë˜ ìˆë˜ ìë¦¬ë³´ë‹¤ ì˜¤ë¥¸ìª½ ìë¦¬ë¥¼ ì‹œì‘ì—´ë¡œ í•˜ê³  ì¬ê·€.
+			dfs(point, back + 1);
+			return;
+		}
+		//ê°€ëŠ¥í•œ ì—´ì´ ìˆìœ¼ë©´ ê·¸ ì—´ì— í€¸ì„ ìœ„ì¹˜.
+		point.push_back(check_result);
+		//ê·¸ ì•„ë˜ í–‰ì„ ì²«ë²ˆì§¸ ì—´ë¶€í„° ì°¾ëŠ”ë‹¤.
+		dfs(point, 0);
+		return;
+	}
+	//ëª¨ë‘ ì±„ì›Œì¡Œì„ ê²½ìš°. ê·¸ ìœ„ì¹˜ë¥¼ ì¶œë ¥.
+	if (point.size() == 11) {
+		for (int i = 0; i < 11; i++) {
+			cout << point[i] << "/";
+		}
+	}
+	return;
+}
 
 
 int main() {
 	double startTime = clock();
-	// Ã£°íÀÚ ÇÏ´Â ¼Ò¼öÀÇ »óÇÑ
-	const int kMax = 1000'000'000;
-	// ÀÚ½ÅÀÇ ÃÖ¼Ò ¼ÒÀÎ¼ö¸¦ ´ãÀ» ¹è¿­, ÃÊ±â°ªÀº 0
-	int* leastPrimeFactor = new int[kMax + 1]();
-	// ¼Ò¼ö¸¦ ´ãÀ» º¤ÅÍ
-	vector<int> prime;
-	for (int i = 2; i <= kMax; i++) {
-		//ÇÕ¼º¼ö°¡ ¾Æ´Ò °æ¿ì
-		if (leastPrimeFactor[i] == 0) {
-			leastPrimeFactor[i] = i;
-			prime.push_back(i);
-		}
-		//ÇÕ¼º¼ö¸¦ »ı¼ºÇÏ°í ÃÖ¼Ò ¼ÒÀÎ¼ö¸¦ ÀÔ·Â
-		for (int j = 0; j < prime.size() && i * prime[j] <= kMax && prime[j] <= leastPrimeFactor[i]; j++) {
-			leastPrimeFactor[i * prime[j]] = prime[j];
-		}
-	}
-	//¼Ò¼öÀÇ °³¼ö
-	size_t numberOfPrime = prime.size();
-	cout << "¼Ò¼öÀÇ °³¼ö: " << numberOfPrime << endl;
+	//í€¸ì´ ë†“ì—¬ì§€ì§€ ì•Šì•˜ì„ ë•Œ, ì²«ë²ˆì§¸ í–‰ê³¼ ì—´ì—ì„œë¶€í„° ì‹œì‘
+	vector<int> point;
+	dfs(point,0);
 	double endTime = clock();
 	double elapsedTime = (double)(endTime - startTime);
-	cout << "ÇÁ·Î±×·¥ ¼öÇà ½Ã°£: " << elapsedTime << endl;
+	cout << "time: " << elapsedTime << endl;
 	return 0;
 }
