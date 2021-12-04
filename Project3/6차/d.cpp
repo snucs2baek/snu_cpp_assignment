@@ -4,15 +4,17 @@
 #include <vector>
 
 using namespace std;
-
+// vector max size를 넘는 수 미만의 소수를 구하기 위해 2차원 벡터 형태로 나타낸다.
+//가로
 const long long total_r = 1000'000;
+//세로 (가로*세로 = 수)
 const long long v_size = 1000'000;
 
 long long front_front;
 long long back_front;
 
 vector <vector<bool>> All(total_r+1, vector <bool> (v_size+1));
-
+// 앞에서부터 소수를 제거
 void* thread_function_front(void* data) {
 	vector <int> prime_front = *((vector <int>*)data);
 	int front_front = prime_front[0];
@@ -27,9 +29,10 @@ void* thread_function_front(void* data) {
 	}
 	return NULL;
 }
-
+//뒤에서부터 소수를 제거
 void* thread_function_back(void* data) {
 	vector <int> prime_back = *((vector <int>*)data);
+	//주어진 수 미만의 소수의 최대 배수(시작점) 찾기
 	long long back_front = ((v_size*total_r)-((v_size*total_r)%(prime_back[0]*v_size+prime_back[1])))/v_size;
 	long long back_back = ((v_size*total_r)-((v_size*total_r)%(prime_back[0]*v_size+prime_back[1])))%v_size;
 	while(front_front<back_front&back_front>0) {
